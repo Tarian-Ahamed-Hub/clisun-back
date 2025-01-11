@@ -6,7 +6,7 @@ const db_url = process.env.DB_URL;
 
 const connect=async()=>{
     try{
-        await mongoose.connect(db_url)
+        await mongoose.connect(db_url,{ timezone: '+06:00'})
         console.log("DB connected")
     }
     catch(err){
