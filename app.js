@@ -21,8 +21,9 @@ const hasAccess = require("./middleware/hasAccess");
 const isEmployee = require("./middleware/isEmployee");
 const jsonParser = bodyParser.json()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
+const front_end = process.env.BASE_URL;
 //https://zihan.alamgirenterprise.com
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+app.use(cors({ credentials: true, origin: front_end }));
 
 app.use(jsonParser)
 app.use(urlencodedParser)

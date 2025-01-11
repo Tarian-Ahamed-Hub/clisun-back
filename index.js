@@ -10,11 +10,11 @@ const app = appConfig.app;
 
 // Create an HTTP server
 const httpServer = http.createServer(app);
-
+const front_end = process.env.BASE_URL;
 // Attach Socket.IO to the HTTP server
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:3000", // Allow frontend to connect
+    origin: front_end, // Allow frontend to connect
     methods: ["GET", "POST"],
     credentials: true,
   },

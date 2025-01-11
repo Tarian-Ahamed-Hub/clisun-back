@@ -177,6 +177,7 @@ exports.addProduct = async (req, res) => {
         size,
         color,
         stock,
+        description,
         attribute1,
         attribute2,
         attribute3,
@@ -186,7 +187,7 @@ exports.addProduct = async (req, res) => {
       } = req.body;
   
       // Ensure the required fields are provided
-      if (!name || !sku || !curr_price || !size || !color || stock === undefined) {
+      if (!description || !name || !sku || !curr_price || !size || !color || stock === undefined) {
         return res.status(202).json({status:202, message: "Missing required fields" });
       }
   
@@ -206,6 +207,7 @@ exports.addProduct = async (req, res) => {
         color,
         stock,
         pics,
+        description,
         attribute1,
         attribute2,
         attribute3,

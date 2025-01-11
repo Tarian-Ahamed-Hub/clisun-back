@@ -31,7 +31,7 @@ exports.getAuctionDetails  = async (req, res) => {
     // Find the auction by ID, exclude `bidding_history`, and populate product details
     const auction = await Auction.findOne({ _id: auctionId })
       .select("-bidding_history") // Exclude `bidding_history` field
-      .populate("product_id", "pics name") // Populate product details, exclude `_id` from product
+      .populate("product_id", "pics name size color  description") // Populate product details, exclude `_id` from product
       .exec();
 
     // If auction not found, return an appropriate message
@@ -71,7 +71,7 @@ exports.getAucItems = async (req, res) => {
         // Check if any auctions are found
         if (!auctions.length) {
           return res.status(202).json({
-            status: 202,
+            status: 203,
             message: "No active auctions found",
           });
         }
