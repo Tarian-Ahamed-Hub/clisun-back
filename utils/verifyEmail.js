@@ -14,7 +14,7 @@ module.exports = async (email,subject,text)=>{
         
     })
     await transporter.sendMail({
-        from:process.env.USER,
+        from: `"Y2kTap" <${process.env.USER}>`,
         to:email,
         subject:subject,
         text:text

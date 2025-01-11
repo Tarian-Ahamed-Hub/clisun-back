@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
   
 
 
-route.get("/upload",testController.upload);
-route.post("/upload",upload,testController.uploadPost);
+//route.get("/upload",testController.upload);
+//route.post("/upload",upload,testController.uploadPost);
 
 module.exports = route;
