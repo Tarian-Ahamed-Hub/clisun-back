@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser")
 const router = express.Router();
 const app = express();
+process.env.TZ = 'Asia/Dhaka';
 const multer = require("multer") 
 // const cookieSession = require("cookie-session")
 const session = require("express-session");
