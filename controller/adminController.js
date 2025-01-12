@@ -49,7 +49,7 @@ exports.getAuctionDetails = async (req, res) => {
   };
 
 exports.setPermission = async (req, res) => {
-  const { email, yes } = req.body;
+  const { email, role } = req.body;
 
   try {
     // Validate if email is provided
@@ -71,14 +71,10 @@ exports.setPermission = async (req, res) => {
       });
     }
 
-    // Set role based on 'yes' parameter
-    const newRole = yes ? 2 : 0;
-  console.log(newRole)
-    // Update user role
-    const userToUpdate = await user.findOne({ email });
+   
 
 
-    the_user.role = newRole;
+    the_user.role = role;
     await the_user.save();
   
 
