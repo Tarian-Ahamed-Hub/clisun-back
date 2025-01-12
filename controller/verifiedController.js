@@ -31,7 +31,7 @@ exports.getAuctionDetails  = async (req, res) => {
     // Find the auction by ID, exclude `bidding_history`, and populate product details
     const auction = await Auction.findOne({ _id: auctionId })
       .select("-bidding_history") // Exclude `bidding_history` field
-      .populate("product_id", "pics name size color  description") // Populate product details, exclude `_id` from product
+      .populate({path:"product_id",  select: "-stock -createdOn"}) // Populate product details, exclude `_id` from product
       .exec();
 
     // If auction not found, return an appropriate message
