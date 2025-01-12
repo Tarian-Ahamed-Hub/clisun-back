@@ -73,7 +73,7 @@ exports.setPermission = async (req, res) => {
 
     // Set role based on 'yes' parameter
     const newRole = yes ? 2 : 0;
-
+  console.log(newRole)
     // Update user role
     const userToUpdate = await user.findOne({ email });
 
