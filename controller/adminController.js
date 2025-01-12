@@ -75,11 +75,15 @@ exports.setPermission = async (req, res) => {
     const newRole = yes ? 2 : 0;
 
     // Update user role
-    const updatedUser = await user.findOneAndUpdate(
-      { email },
-      { role: newRole },
-      { new: true } // Return updated document
-    ).select("email role -_id");
+    const userToUpdate = await user.findOne({ email });
+
+if (userToUpdate) {
+  userToUpdate.role = newRole;
+  const updatedUser = await userToUpdate.save();
+  console.log(updatedUser);
+} else {
+  console.log("User not found");
+}
 
     return res.status(200).json({
       status: 200,
