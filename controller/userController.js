@@ -176,10 +176,24 @@ try{
                  await the_user.save()
     
                 await verify.deleteOne({ email: the_user.email, verified: true }); //change struct of inVerify
+                const session_token = createToken(the_user._id,the_user.email,'30d');
+                const newSession = new Session({
+                    id:uuidv4(),
+                    userId:the_user._id,
+                    name:the_user.name,
+                    email:the_user.email,
+                    token:session_token
+                 })
+                 await newSession.save()
+
                 return res.status(200).json({
                       status:200,
-                      message:"Verified",
-                      redirect:`${process.env.BASE_URL}/login`,
+                   token:session_token,
+                   role:the_user.role,
+                    name:the_user.name,
+                        
+                    message:"Logged In",
+                    redirect:`${process.env.BASE_URL}/home`
                 })
             }
             else{
@@ -316,7 +330,7 @@ exports.loginVerify = async(req,res)=>{
            
            if(inVerify && otp===inVerify.otp && inVerify.type==="login"){
                     const the_user = await User.findOne({email:user.email});
-                    const session_token = createToken(the_user._id,the_user.email,'2d');
+                    const session_token = createToken(the_user._id,the_user.email,'30d');
 
                     const newSession = new Session({
                      id:uuidv4(),
