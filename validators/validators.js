@@ -47,7 +47,7 @@ const registerValidation = [
       const errors = validationResult(req);
   
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(202).json({status:202, errors: errors.array() });
       }
   
       next();
