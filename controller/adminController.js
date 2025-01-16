@@ -51,7 +51,8 @@ exports.getAuctionDetails = async (req, res) => {
             }
           });
           const winner = await user.findById(earliestBid.user_id);
-          auction.winner = winner.name;
+          auction.winner_email = winner.email;
+          auction.winner_name = winner.name;
 
         });
       
