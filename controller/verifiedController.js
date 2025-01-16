@@ -49,12 +49,14 @@ exports.getAuctionDetails  = async (req, res) => {
     let earliestBid = null;
 
     auction.bidding_history.forEach((bid) => {
+      console.log("Present ",bid.bid_time)
       if (bid.offer > highestOffer) {
         
         highestOffer = bid.offer;
         earliestBid = bid;
       } else if (bid.offer === highestOffer) {
-         
+        console.log("Present ",bid.bid_time)
+        console.log("Earlier ",earliestBid.bid_time)
         if (!earliestBid || new Date(bid.bid_time) < new Date(earliestBid.bid_time)) {
           earliestBid = bid;
         }
@@ -189,12 +191,14 @@ exports.placeBid = async (req, res) => {
     let earliestBid = null;
 
     auction.bidding_history.forEach((bid) => {
+     
       if (bid.offer > highestOffer) {
         
         highestOffer = bid.offer;
         earliestBid = bid;
       } else if (bid.offer === highestOffer) {
-         
+        console.log("Present ",bid.bid_time)
+        console.log("Earlier ",earliestBid.bid_time)
         if (!earliestBid || new Date(bid.bid_time) < new Date(earliestBid.bid_time)) {
           earliestBid = bid;
         }
