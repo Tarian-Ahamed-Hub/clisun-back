@@ -53,6 +53,7 @@ exports.getAuctionDetails = async (req, res) => {
           const winner = await user.findById(earliestBid.user_id);
           auction.winner_email = winner.email;
           auction.winner_name = winner.name;
+          auction.winner_offer = earliestBid.offer;
 
         });
       
