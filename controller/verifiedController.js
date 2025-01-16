@@ -61,9 +61,10 @@ exports.getAuctionDetails  = async (req, res) => {
         }
       }
     });
-
+    let winner={name:null};
+    if(earliestBid!==null)
+      winner = await User.findById(earliestBid.user_id);
     
-    const winner = await User.findById(earliestBid.user_id);
     auction.bidding_history = [];
 
     // Return the auction details
