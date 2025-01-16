@@ -56,6 +56,8 @@ exports.getAuctionDetails = async (req, res) => {
           auction.winner_offer = earliestBid.offer;
 
         });
+
+        console.log(auctions);
       
           
          
