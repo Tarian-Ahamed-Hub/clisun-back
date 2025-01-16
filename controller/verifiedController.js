@@ -30,9 +30,11 @@ exports.getAuctionDetails  = async (req, res) => {
 
     // Find the auction by ID, exclude `bidding_history`, and populate product details
     const auction = await Auction.findOne({ _id: auctionId })
-      .select("-bidding_history") // Exclude `bidding_history` field
       .populate({path:"product_id",  select: "-stock -createdOn"}) // Populate product details, exclude `_id` from product
       .exec();
+
+
+
 
     // If auction not found, return an appropriate message
     if (!auction) {
@@ -42,11 +44,33 @@ exports.getAuctionDetails  = async (req, res) => {
       });
     }
 
+    
+    let highestOffer = -2;
+    let earliestBid = null;
+
+    auction.bidding_history.forEach((bid) => {
+      if (bid.offer > highestOffer) {
+        
+        highestOffer = bid.offer;
+        earliestBid = bid;
+      } else if (bid.offer === highestOffer) {
+         
+        if (!earliestBid || new Date(bid.bid_time) < new Date(earliestBid.bid_time)) {
+          earliestBid = bid;
+        }
+      }
+    });
+
+  
+    const winner = await User.findById(earliestBid.user_id);
+    auction.bidding_history = [];
+
     // Return the auction details
     return res.status(200).json({
       status: 200,
       message: "Auction details fetched successfully",
       data: auction,
+      winner:winner.name
     });
   } catch (error) {
     console.error("Error fetching auction details:", error);
@@ -159,17 +183,42 @@ exports.placeBid = async (req, res) => {
 
     const io = req.app.get("io");
     // Emit the new bid to all connected clients
+    
+
+    let highestOffer = -2;
+    let earliestBid = null;
+
+    auction.bidding_history.forEach((bid) => {
+      if (bid.offer > highestOffer) {
+        
+        highestOffer = bid.offer;
+        earliestBid = bid;
+      } else if (bid.offer === highestOffer) {
+         
+        if (!earliestBid || new Date(bid.bid_time) < new Date(earliestBid.bid_time)) {
+          earliestBid = bid;
+        }
+      }
+    });
+  
+    const winner = await User.findById(earliestBid.user_id);
+  
     io.emit("newBid", {
       auctionId: auction._id,
       newPrice: auction.curr_price,
+      name:user.name,
+      winner:winner.name
     });
-
-    // Respond with success
+ 
     return res.status(200).json({
       status: 200,
       message: "Bid placed successfully",
-      data: auction,
+      name:user.name,
+      winner:winner.name
     });
+
+   
+
   } catch (error) {
     console.error("Error placing bid:", error);
     return res.status(500).json({
