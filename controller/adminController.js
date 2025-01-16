@@ -15,7 +15,7 @@ require("dotenv").config();
 exports.getAuctionDetails = async (req, res) => {
     try {
       // Fetch auctions with populated product and bidding history
-      let auctions = await Auction.find()
+      const auctions = await Auction.find()
         .populate({
           path: "product_id", // Populate product details
           select: "name pics description price", // Select fields to return
@@ -32,35 +32,8 @@ exports.getAuctionDetails = async (req, res) => {
           message: "No auctions found",
         });
       }
-
-      auctions.forEach(async(auction) => {
-      let highestOffer = -2;
-          let earliestBid = null;
+  
       
-          auction.bidding_history.forEach((bid) => {
-         
-            if (bid.offer > highestOffer) {
-              
-              highestOffer = bid.offer;
-              earliestBid = bid;
-            } else if (bid.offer === highestOffer) {
-            
-              if (!earliestBid || new Date(bid.bid_time) < new Date(earliestBid.bid_time)) {
-                earliestBid = bid;
-              }
-            }
-          });
-          const winner = await user.findById(earliestBid.user_id);
-          auction.winner_email = winner.email;
-          auction.winner_name = winner.name;
-          auction.winner_offer = earliestBid.offer;
-
-        });
-        
-      
-          
-         
-
       // Return the auction details
       return res.status(200).json({
         status: 200,
