@@ -54,10 +54,11 @@ exports.getAuctionDetails = async (req, res) => {
           auction.winner_email = winner.email;
           auction.winner_name = winner.name;
           auction.winner_offer = earliestBid.offer;
-
+         
+          console.log(auction)
         });
 
-        console.log(auctions);
+       
       
           
          
