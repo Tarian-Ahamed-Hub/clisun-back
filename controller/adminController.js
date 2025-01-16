@@ -12,6 +12,47 @@ const { default: mongoose } = require("mongoose");
  
 require("dotenv").config();
 
+async function processAuctions(auctions) {
+  for (const auction of auctions) {
+      let highestOffer = -2;
+      let earliestBid = null;
+
+      // Determine the highest bid and the earliest bid in case of a tie
+      for (const bid of auction.bidding_history) {
+          if (bid.offer > highestOffer) {
+              highestOffer = bid.offer;
+              earliestBid = bid;
+          } else if (bid.offer === highestOffer) {
+              if (!earliestBid || new Date(bid.bid_time) < new Date(earliestBid.bid_time)) {
+                  earliestBid = bid;
+              }
+          }
+      }
+
+      if (earliestBid) {
+          try {
+              // Fetch the winner's details
+              const winner = await user.findById(earliestBid.user_id);
+
+              // Add the winner's details to the auction object
+              auction.winner_email = winner?.email || "Unknown";
+              auction.winner_name = winner?.name || "Unknown";
+              auction.winner_offer = earliestBid.offer;
+          } catch (error) {
+              console.error(`Error fetching user with ID ${earliestBid.user_id}:`, error);
+              auction.winner_email = "Error";
+              auction.winner_name = "Error";
+              auction.winner_offer = null;
+          }
+      } else {
+          // Handle cases where there are no bids
+          auction.winner_email = null;
+          auction.winner_name = null;
+          auction.winner_offer = null;
+      }
+  }
+  return auctions;
+}
 exports.getAuctionDetails = async (req, res) => {
     try {
       // Fetch auctions with populated product and bidding history
@@ -33,32 +74,33 @@ exports.getAuctionDetails = async (req, res) => {
         });
       }
 
-      auctions.forEach(async(auction) => {
-      let highestOffer = -2;
-          let earliestBid = null;
+      // auctions.forEach(async(auction) => {
+      // let highestOffer = -2;
+      //     let earliestBid = null;
       
-          auction.bidding_history.forEach((bid) => {
+      //     auction.bidding_history.forEach((bid) => {
          
-            if (bid.offer > highestOffer) {
+      //       if (bid.offer > highestOffer) {
               
-              highestOffer = bid.offer;
-              earliestBid = bid;
-            } else if (bid.offer === highestOffer) {
+      //         highestOffer = bid.offer;
+      //         earliestBid = bid;
+      //       } else if (bid.offer === highestOffer) {
             
-              if (!earliestBid || new Date(bid.bid_time) < new Date(earliestBid.bid_time)) {
-                earliestBid = bid;
-              }
-            }
-          });
-          const winner = await user.findById(earliestBid.user_id);
-          auction.winner_email = winner.email;
-          auction.winner_name = winner.name;
-          auction.winner_offer = earliestBid.offer;
-         
-          console.log(winner.email)
-        });
+      //         if (!earliestBid || new Date(bid.bid_time) < new Date(earliestBid.bid_time)) {
+      //           earliestBid = bid;
+      //         }
+      //       }
+      //     });
+      //     const winner = await user.findById(earliestBid.user_id);
+      //     auction.winner_email = winner.email;
+      //     auction.winner_name = winner.name;
+      //     auction.winner_offer = earliestBid.offer;
+        
+      //   });
 
-       
+      
+
+       let aucs = await processAuctions(auctions);
       
           
          
@@ -67,7 +109,7 @@ exports.getAuctionDetails = async (req, res) => {
       return res.status(200).json({
         status: 200,
         message: "Auction details fetched successfully",
-        data: auctions,
+        data: aucs,
       });
     } catch (error) {
       console.error("Error fetching auction details:", error);
