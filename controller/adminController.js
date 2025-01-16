@@ -33,7 +33,6 @@ exports.getAuctionDetails = async (req, res) => {
         });
       }
   
-      
       // Return the auction details
       return res.status(200).json({
         status: 200,
