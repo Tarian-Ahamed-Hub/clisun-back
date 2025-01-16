@@ -27,7 +27,7 @@ const sessionSchema = mongoose.Schema({
     createdOn:{
         type:Date,
         default:Date.now,
-        expires:2592000  //should be 172,800 2 days
+        expires:2592000   
     }
 })
 
