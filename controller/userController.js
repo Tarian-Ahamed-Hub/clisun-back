@@ -176,7 +176,7 @@ try{
                  await the_user.save()
     
                 await verify.deleteOne({ email: the_user.email, verified: true }); //change struct of inVerify
-                const session_token = createToken(the_user._id,the_user.email,'30d');
+                const session_token = createToken(the_user._id,the_user.email,'2592000s');
                 const newSession = new Session({
                     id:uuidv4(),
                     userId:the_user._id,
@@ -330,7 +330,7 @@ exports.loginVerify = async(req,res)=>{
            
            if(inVerify && otp===inVerify.otp && inVerify.type==="login"){
                     const the_user = await User.findOne({email:user.email});
-                    const session_token = createToken(the_user._id,the_user.email,'30d');
+                    const session_token = createToken(the_user._id,the_user.email,'2592000s');
 
                     const newSession = new Session({
                      id:uuidv4(),

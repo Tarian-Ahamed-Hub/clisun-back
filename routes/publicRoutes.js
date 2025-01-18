@@ -23,8 +23,9 @@ router.post("/loggedIn",
         }
         else{
             const token_in_session = await Session.findOne({ token });
-            const the_user = await User.findOne({ email:token_in_session.email });
+
             if(token_in_session){
+                const the_user = await User.findOne({ email:token_in_session?.email });
                 return res.status(200).json({
                     status:200,
                     role:the_user.role,
