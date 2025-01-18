@@ -24,8 +24,17 @@ router.post("/loggedIn",
         else{
             const token_in_session = await Session.findOne({ token });
 
-            if(token_in_session){
-                const the_user = await User.findOne({ email:token_in_session?.email });
+
+             if(token_in_session){
+                
+            if(token_in_session===null || token_in_session.email===null){
+                return res.status(402).json({
+                    status:402,
+                    message:"Invalid/Expired Token"
+                })
+            }
+
+                const the_user = await User.findOne({ email:token_in_session.email });
                 return res.status(200).json({
                     status:200,
                     role:the_user.role,
